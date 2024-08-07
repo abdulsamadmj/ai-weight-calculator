@@ -1,6 +1,8 @@
-"use client"
+// src/components/FileUploader.tsx
+"use client";
 import React, { useState } from "react";
 import axios from "axios";
+import { useDropzone } from "react-dropzone";
 
 const FileUploader: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -8,13 +10,27 @@ const FileUploader: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [processedFileUrl, setProcessedFileUrl] = useState<string | null>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFile(e.target.files[0]);
+  const onDrop = (acceptedFiles: File[]) => {
+    if (acceptedFiles && acceptedFiles.length > 0) {
+      setFile(acceptedFiles[0]);
       setError(null);
       setProcessedFileUrl(null);
     }
   };
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    multiple: false,
+    accept: {
+      "application/pdf": [".pdf"],
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [
+        ".xlsx",
+        ".xls",
+      ],
+      "text/csv": [".csv"],
+      "image/*": [".png", ".jpg", ".jpeg"],
+    },
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,7 +67,11 @@ const FileUploader: React.FC = () => {
   return (
     <div className="max-w-md mx-auto mt-8">
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="flex items-center justify-center w-full">
+        <div
+          {...getRootProps({ className: "dropzone" })}
+          className="flex items-center justify-center w-full"
+        >
+          <input {...getInputProps()} />
           <label
             htmlFor="file-upload"
             className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
@@ -77,13 +97,6 @@ const FileUploader: React.FC = () => {
               </p>
               <p className="text-xs text-gray-500">Excel, PDF, or Image file</p>
             </div>
-            <input
-              id="file-upload"
-              type="file"
-              className="hidden"
-              onChange={handleFileChange}
-              accept=".xlsx,.xls,.pdf,.png,.jpg,.jpeg"
-            />
           </label>
         </div>
         {file && (
