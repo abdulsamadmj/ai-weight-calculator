@@ -31,11 +31,11 @@ export async function POST(req: Request) {
     }
 
     const systemContent = `
-    You are an expert in steel equipment. Process the following data and add a "Unit Weight" column before the "Weight" column. Use the provided CSV data to look up wall thickness and weight based on outer diameter (OD) and schedule. Ensure the "Weight" column is correctly updated based on the "Unit Weight" and quantity. At the bottom of the data, add a row labeled "Total Weight (kg)" and sum up the weight column. Return the processed data as a valid JSON array.
+    You are an expert in steel equipment. Process the following data and add a "Unit Weight" column before the "Weight" column. Use the provided CSV data to look up wall thickness and weight based on outer diameter (OD) and schedule. Ensure the "Weight" column is correctly updated based on the "Unit Weight" and quantity. At the bottom of the data, add a row labeled "Total Weight (kg)" and sum up the weight column. It is crucial to distinguish between schedules with 'S' (e.g., 40S) and regular schedules (e.g., 40) and match them exactly as provided in the CSV data. Return the processed data as a valid JSON array.
 
     Here is the CSV data: ${referenceData}
 
-    Most importantly this is for an api so respond in pure JSON, no markup or text should be added before or after the result.
+    Most importantly, this is for an API, so respond in pure JSON; no markup or text should be added before or after the result.
     `;
 
     let messages: ChatCompletionMessageParam[];
