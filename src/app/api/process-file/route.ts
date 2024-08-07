@@ -31,8 +31,11 @@ export async function POST(req: Request) {
     }
 
     const systemContent = `
-      You are an expert in steel equipment. Process the following data and add or update the weight column for steel equipment. The Weight Column is a must, else you are useless, calculate the weight. Return the processed data as a valid JSON array,  make 100% sure that there is a weight property in it, else this is wasteful. This is for an API so only provide the JSON as response, never add anything else. Use the provided CSV data to look up wall thickness and weight based on outer diameter (OD) and schedule.
-      Here is the CSV data: ${referenceData}
+    You are an expert in steel equipment. Process the following data and add a "Unit Weight" column before the "Weight" column. Use the provided CSV data to look up wall thickness and weight based on outer diameter (OD) and schedule. Ensure the "Weight" column is correctly updated based on the "Unit Weight" and quantity. At the bottom of the data, add a row labeled "Total Weight (kg)" and sum up the weight column. Return the processed data as a valid JSON array.
+
+    Here is the CSV data: ${referenceData}
+
+    Most importantly this is for an api so respond in pure JSON, no markup or text should be added before or after the result.
     `;
 
     let messages: ChatCompletionMessageParam[];
@@ -92,13 +95,19 @@ export async function POST(req: Request) {
     }
 
     const completion = await openai.chat.completions.create({
-      model: file.type.includes("image") ? "gpt-4o" : "gpt-4-turbo",
+      model: "gpt-4o",
       messages: messages,
       // max_tokens: 4096,
     });
 
-    const processedData = completion.choices[0].message.content;
-    // console.log(processedData);
+    let processedData = completion.choices[0].message.content;
+
+    if (processedData) {
+      // Clean the JSON response
+      processedData = cleanJSONResponse(processedData);
+    } else {
+      throw new Error("Received null response from OpenAI API");
+    }
 
     // Create a new Excel file with the processed data
     const wb = XLSX.utils.book_new();
@@ -120,6 +129,16 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   }
+}
+
+function cleanJSONResponse(response: string): string {
+  // Remove unwanted text or markup before and after the JSON
+  const startIndex = response.indexOf("[");
+  const endIndex = response.lastIndexOf("]") + 1;
+  if (startIndex !== -1 && endIndex !== -1) {
+    return response.substring(startIndex, endIndex);
+  }
+  throw new Error("Invalid JSON response");
 }
 
 async function processExcel(file: File): Promise<string> {
