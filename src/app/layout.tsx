@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import { BackgroundGradientAnimation } from "@/components/ui/bg-gradient-animation";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -58,13 +59,7 @@ export default function RootLayout({
       </head>
       <body className={inter.className + " flex flex-col items-center"}>
         <div className="z-0 h-screen w-screen absolute blur-2xl">
-          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-            <path
-              fill="#FF8B31"
-              d="M42.2,-16.1C48.1,4.7,42,27,23.3,43.2C4.6,59.3,-26.5,69.4,-46.5,56.6C-66.5,43.9,-75.3,8.3,-65.7,-17.6C-56.1,-43.4,-28,-59.4,-5,-57.8C18.1,-56.2,36.2,-36.9,42.2,-16.1Z"
-              transform="translate(100 100)"
-            />
-          </svg>
+          <BackgroundGradientAnimation />
         </div>
         <div className="z-10 bg-[rgba(0,0,0,0.5)] w-screen h-screen backdrop-filter backdrop-blur-sm">
           <Navbar />
