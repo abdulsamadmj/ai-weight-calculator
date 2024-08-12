@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { ThemeProvider } from 'next-themes';
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { BackgroundGradientAnimation } from "@/components/ui/bg-gradient-animation";
@@ -57,14 +58,19 @@ export default function RootLayout({
           content="https://calculator.metalzoneuae.com/ss.png"
         />
       </head>
-      <body className={inter.className + " flex flex-col items-center"}>
-        <div className="z-0 h-screen w-screen absolute blur-2xl">
-          <BackgroundGradientAnimation />
-        </div>
-        <div className="z-10 bg-[rgba(0,0,0,0.5)] w-screen h-screen backdrop-filter backdrop-blur-sm">
-          <Navbar />
-          {children}
-        </div>
+      <body
+        className={
+          inter.className +
+          " flex flex-col items-center text-black dark:text-white"
+        }
+      >
+        <ThemeProvider attribute="class">
+          <BackgroundGradientAnimation containerClassName="bg-white dark:bg-zinc-900" />
+          <div className="absolute w-screen h-screen flex flex-col items-center z-0">
+            <Navbar />
+            {children}
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );

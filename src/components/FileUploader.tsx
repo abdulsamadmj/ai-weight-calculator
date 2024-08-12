@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useDropzone } from "react-dropzone";
+import { PlaceholdersAndVanishInput } from "./ui/vanish-input";
 
 const FileUploader: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -64,8 +65,24 @@ const FileUploader: React.FC = () => {
     }
   };
 
+  const placeholders = [
+    "CS 40S 2 inch 30 meter, weight?",
+    "Type in your product details!",
+    "Calculate the weight of your Steel Products",
+  ];
+
+  const textfieldChangeHandler = () => {};
+
+  const textfieldSubmitHandler = () => {};
+
   return (
     <div className="max-w-md mx-auto mt-8">
+      <PlaceholdersAndVanishInput
+        placeholders={placeholders}
+        onChange={textfieldChangeHandler}
+        onSubmit={textfieldSubmitHandler}
+      />
+      <div className="p-5 text-xl text-center">OR</div>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div
           {...getRootProps({ className: "dropzone" })}

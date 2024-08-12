@@ -1,17 +1,24 @@
 "use client";
+
 import { IconMoon, IconSun } from "@tabler/icons-react";
 import { Tooltip } from "flowbite-react";
 import React from "react";
+import { useTheme } from "next-themes";
 
 function ThemeSwitch() {
-  const [lightTheme, setLightTheme] = React.useState<boolean>(false);
+  const { theme, setTheme } = useTheme();
+  const isLightTheme = theme === "light";
+
   const themeSwitchHandler = () => {
-    setLightTheme((theme) => !theme);
+    setTheme(isLightTheme ? "dark" : "light");
   };
+
   return (
-    <Tooltip content={lightTheme ? "Toggle Dark Theme" : "Toggle Light Theme"}>
-      <button type="button" className="w-10 h-10 " onClick={themeSwitchHandler}>
-        {lightTheme ? (
+    <Tooltip
+      content={isLightTheme ? "Toggle Dark Theme" : "Toggle Light Theme"}
+    >
+      <button type="button" className="w-10 h-10" onClick={themeSwitchHandler}>
+        {isLightTheme ? (
           <IconMoon className="w-full h-full" />
         ) : (
           <IconSun className="w-full h-full" />
