@@ -187,9 +187,9 @@ const FileUploader: React.FC = () => {
               <button
                 type="submit"
                 disabled={!file || loading}
-                className={`w-fit pl-4 pr-2 py-2 text-black dark:text-white rounded-[20px] ${
+                className={`w-fit pl-4 pr-2 py-2 text-white dark:text-black rounded-[20px] hover:cursor-pointer ${
                   !file || loading
-                    ? "bg-zinc-900 cursor-not-allowed"
+                    ? "bg-[#ff8b31] hover:bg-[#ff8a31b3]"
                     : "bg-[#ff8b31] hover:bg-[#ff8a31b3]"
                 }`}
               >
