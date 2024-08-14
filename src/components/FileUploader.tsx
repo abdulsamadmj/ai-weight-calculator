@@ -6,15 +6,16 @@ import { useDropzone } from "react-dropzone";
 import { PlaceholdersAndVanishInput } from "./ui/vanish-input";
 import { BackgroundGradient } from "./ui/bg-gradient";
 import {
-  IconAlertTriangleFilled,
   IconChevronRight,
   IconDownload,
-  IconInfoCircle,
+  IconInfoCircleFilled,
   IconLoaderQuarter,
   IconThumbUp,
+  IconThumbUpFilled,
+  IconX,
 } from "@tabler/icons-react";
 import Link from "next/link";
-import { Button } from "flowbite-react";
+import { Button, Tooltip } from "flowbite-react";
 
 const FileUploader: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -90,32 +91,39 @@ const FileUploader: React.FC = () => {
     <div className="max-w-md mx-auto mt-8">
       {processedFileUrl ? (
         <div>
-          <BackgroundGradient className="rounded-[20px] max-w-md w-full bg-white dark:bg-zinc-900 flex justify-center items-center h-64">
+          <BackgroundGradient className="relative rounded-[20px] max-w-md w-full bg-white dark:bg-zinc-900 flex justify-center items-center h-64">
             <div className="w-fit">File Preview</div>
           </BackgroundGradient>
-          <div className="flex flex-col items-center">
-            <a
-              href={processedFileUrl}
-              download="processed_file"
-              className="flex gap-1 w-fit pl-4 pr-3 py-2 text-black dark:text-white rounded-[20px] bg-[#ff8b31] hover:bg-[#ff8a31b3] mt-4"
-            >
-              Download
-              <IconDownload />
-            </a>
-            <div className="flex flex-col mt-2 items-start w-fit">
-              <p className="pl-2">Feedback</p>
-              <div className="rounded-[20px] p-4 flex gap-2">
+          <div className="flex flex-col items-center px-4">
+            <div className="w-full flex justify-between">
+              <Link
+                href={processedFileUrl ?? ""}
+                download="processed_file"
+                className=" flex gap-1 w-fit pl-4 pr-3 py-2 text-black dark:text-white rounded-[20px] bg-[#ff8b31] hover:bg-[#ff8a31b3] mt-4"
+              >
+                Download
+                <IconDownload />
+              </Link>
+              <div className="flex gap-2">
+                <button className="flex gap-1 w-fit pl-4 pr-3 py-2 text-black dark:text-white rounded-[20px] bg-[#ff8b31] hover:bg-[#ff8a31b3] mt-4">
+                  Get Quotation
+                  <IconChevronRight />
+                </button>
+              </div>
+            </div>
+            <div className="max-w-md w-full flex flex-col mt-4 items-start">
+              <div className="rounded-[20px] p-4 px-6 flex gap-4 backdrop-filter backdrop-blur-sm bg-black bg-opacity-40 w-full">
                 <button>
-                  <IconThumbUp className="hover:scale-110 hover:text-[#FF8B31]" />
+                  <IconThumbUpFilled className="hover:scale-110 hover:text-[#FF8B31]" />
                 </button>
                 <button>
-                  <IconThumbUp className="scale-[-1] hover:scale-[-1.1] hover:text-[#FF8B31]" />
+                  <IconThumbUpFilled className="scale-[-1] hover:scale-[-1.1] hover:text-[#FF8B31]" />
                 </button>
-                <div className="flex items-center border-b border-[#FF8B31] py-2">
+                <div className="flex items-center border-b border-[#FF8B31] py-2 w-full">
                   <input
-                    className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                    className="appearance-none placeholder-white bg-transparent border-none w-full text-gray-300 mr-3 py-1 px-2 leading-tight focus:outline-0 "
                     type="text"
-                    placeholder="Comment"
+                    placeholder="Comment your feedback"
                     aria-label="Comment"
                   />
                   <button
@@ -138,13 +146,13 @@ const FileUploader: React.FC = () => {
           />
           <div className="p-5 pb-0 text-xl text-center">OR</div>
           <Link href={""} className="w-full flex gap-1 justify-end pr-2 pb-2">
-            Sample Data <IconInfoCircle />
+            Sample Data <IconInfoCircleFilled />
           </Link>
           <form onSubmit={handleSubmit} className="space-y-4">
             <BackgroundGradient className="rounded-[20px] max-w-md w-full bg-white dark:bg-zinc-900">
               <div
                 {...getRootProps({ className: "dropzone" })}
-                className="flex items-center justify-center w-full rounded-3xl"
+                className="relative flex items-center justify-center w-full rounded-3xl"
               >
                 <input {...getInputProps()} />
                 <label
@@ -178,33 +186,54 @@ const FileUploader: React.FC = () => {
               </div>
             </BackgroundGradient>
 
-            {file && (
+            {/* {file && (
               <p className="text-sm text-gray-500">
                 Selected file: {file.name}
               </p>
-            )}
-            <div className="w-full flex justify-center pt-2">
-              <button
-                type="submit"
-                disabled={!file || loading}
-                className={`w-fit pl-4 pr-2 py-2 text-white dark:text-black rounded-[20px] hover:cursor-pointer ${
-                  !file || loading
-                    ? "bg-[#ff8b31] hover:bg-[#ff8a31b3]"
-                    : "bg-[#ff8b31] hover:bg-[#ff8a31b3]"
-                }`}
-              >
-                {loading ? (
-                  <div className="flex gap-1">
-                    Processing
-                    <IconLoaderQuarter className="animate-spin" />
+            )} */}
+            <div className="w-full flex justify-between mt-4 items-center px-4">
+              <div className="">
+                {file ? (
+                  <div className="flex  gap-2 w-fit px-4 py-2 items-center bg-[#ff8b31] bg-opacity-20 rounded-[20px] ">
+                    <p>{file?.name}</p>
+                    <button onClick={() => setFile(null)}>
+                      <IconX />
+                    </button>
                   </div>
                 ) : (
-                  <div className="flex gap-1">
-                    Process
-                    <IconChevronRight />
-                  </div>
+                  <p>No Files Selected</p>
                 )}
-              </button>
+              </div>
+              <Tooltip
+                className="px-2"
+                arrow={false}
+                content={!file ? "Select a File to Continue" : "Click to Continue"}
+                placement="bottom"
+              >
+                <button
+                  type="submit"
+                  disabled={!file || loading}
+                  className={`w-fit pl-4 pr-2 py-2 text-black dark:text-white rounded-[20px] hover:cursor-pointer ${
+                    !file
+                      ? "bg-gray-500 dark:bg-zinc-900  disabled:cursor-not-allowed"
+                      : loading
+                      ? "bg-gray-500 dark:bg-zinc-900 disabled:cursor-wait"
+                      : "bg-[#ff8b31] hover:bg-[#ff8a31b3]"
+                  }`}
+                >
+                  {loading ? (
+                    <div className="flex gap-1">
+                      Processing
+                      <IconLoaderQuarter className="animate-spin" />
+                    </div>
+                  ) : (
+                    <div className="flex gap-1">
+                      Process
+                      <IconChevronRight />
+                    </div>
+                  )}
+                </button>
+              </Tooltip>
             </div>
           </form>
         </>
