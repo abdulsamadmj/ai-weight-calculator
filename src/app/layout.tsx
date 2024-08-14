@@ -64,7 +64,7 @@ export default function RootLayout({
           " flex flex-col items-center text-black dark:text-white"
         }
       >
-        <ThemeProvider attribute="class">
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <BackgroundGradientAnimation containerClassName="bg-white dark:bg-zinc-900" />
           <div className="absolute w-screen h-screen flex flex-col items-center z-0">
             <Navbar />
