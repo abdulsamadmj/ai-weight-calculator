@@ -4,6 +4,17 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useDropzone } from "react-dropzone";
 import { PlaceholdersAndVanishInput } from "./ui/vanish-input";
+import { BackgroundGradient } from "./ui/bg-gradient";
+import {
+  IconAlertTriangleFilled,
+  IconChevronRight,
+  IconDownload,
+  IconInfoCircle,
+  IconLoaderQuarter,
+  IconThumbUp,
+} from "@tabler/icons-react";
+import Link from "next/link";
+import { Button } from "flowbite-react";
 
 const FileUploader: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -77,70 +88,128 @@ const FileUploader: React.FC = () => {
 
   return (
     <div className="max-w-md mx-auto mt-8">
-      <PlaceholdersAndVanishInput
-        placeholders={placeholders}
-        onChange={textfieldChangeHandler}
-        onSubmit={textfieldSubmitHandler}
-      />
-      <div className="p-5 text-xl text-center">OR</div>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div
-          {...getRootProps({ className: "dropzone" })}
-          className="flex items-center justify-center w-full"
-        >
-          <input {...getInputProps()} />
-          <label
-            htmlFor="file-upload"
-            className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
-          >
-            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-              <svg
-                className="w-10 h-10 mb-3 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                ></path>
-              </svg>
-              <p className="mb-2 text-sm text-gray-500">
-                <span className="font-semibold">Click to upload</span> or drag
-                and drop
-              </p>
-              <p className="text-xs text-gray-500">Excel, PDF, or Image file</p>
+      {processedFileUrl ? (
+        <div>
+          <BackgroundGradient className="rounded-[20px] max-w-md w-full bg-white dark:bg-zinc-900 flex justify-center items-center h-64">
+            <div className="w-fit">File Preview</div>
+          </BackgroundGradient>
+          <div className="flex flex-col items-center">
+            <a
+              href={processedFileUrl}
+              download="processed_file"
+              className="flex gap-1 w-fit pl-4 pr-3 py-2 text-black dark:text-white rounded-[20px] bg-[#ff8b31] hover:bg-[#ff8a31b3] mt-4"
+            >
+              Download
+              <IconDownload />
+            </a>
+            <div className="flex flex-col mt-2 items-start w-fit">
+              <p className="pl-2">Feedback</p>
+              <div className="rounded-[20px] p-4 flex gap-2">
+                <button>
+                  <IconThumbUp className="hover:scale-110 hover:text-[#FF8B31]" />
+                </button>
+                <button>
+                  <IconThumbUp className="scale-[-1] hover:scale-[-1.1] hover:text-[#FF8B31]" />
+                </button>
+                <div className="flex items-center border-b border-[#FF8B31] py-2">
+                  <input
+                    className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                    type="text"
+                    placeholder="Comment"
+                    aria-label="Comment"
+                  />
+                  <button
+                    className="flex-shrink-0 bg-[#FF8B31] hover:bg-transparent border-[#FF8B31] text-sm border-4 text-white hover:text-[#FF8B31] py-1 px-2 rounded"
+                    type="button"
+                  >
+                    <IconChevronRight />
+                  </button>
+                </div>
+              </div>
             </div>
-          </label>
+          </div>
         </div>
-        {file && (
-          <p className="text-sm text-gray-500">Selected file: {file.name}</p>
-        )}
-        <button
-          type="submit"
-          disabled={!file || loading}
-          className={`w-full px-4 py-2 text-white rounded-md ${
-            !file || loading
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-blue-500 hover:bg-blue-600"
-          }`}
-        >
-          {loading ? "Processing..." : "Process File"}
-        </button>
-      </form>
-      {error && <p className="mt-4 text-red-500">{error}</p>}
-      {processedFileUrl && (
-        <a
-          href={processedFileUrl}
-          download="processed_file"
-          className="block mt-4 px-4 py-2 text-center text-white bg-green-500 rounded-md hover:bg-green-600"
-        >
-          Download Processed File
-        </a>
+      ) : (
+        <>
+          <PlaceholdersAndVanishInput
+            placeholders={placeholders}
+            onChange={textfieldChangeHandler}
+            onSubmit={textfieldSubmitHandler}
+          />
+          <div className="p-5 pb-0 text-xl text-center">OR</div>
+          <Link href={""} className="w-full flex gap-1 justify-end pr-2 pb-2">
+            Sample Data <IconInfoCircle />
+          </Link>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <BackgroundGradient className="rounded-[20px] max-w-md w-full bg-white dark:bg-zinc-900">
+              <div
+                {...getRootProps({ className: "dropzone" })}
+                className="flex items-center justify-center w-full rounded-3xl"
+              >
+                <input {...getInputProps()} />
+                <label
+                  htmlFor="file-upload"
+                  className="flex flex-col items-center justify-center w-full h-64 rounded-[20px] cursor-pointer bg-transparent"
+                >
+                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                    <svg
+                      className="w-10 h-10 mb-3 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                      ></path>
+                    </svg>
+                    <p className="mb-2 text-sm text-gray-500">
+                      <span className="font-semibold">Click to upload</span> or
+                      drag and drop
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      Excel, PDF, or Image file
+                    </p>
+                  </div>
+                </label>
+              </div>
+            </BackgroundGradient>
+
+            {file && (
+              <p className="text-sm text-gray-500">
+                Selected file: {file.name}
+              </p>
+            )}
+            <div className="w-full flex justify-center pt-2">
+              <button
+                type="submit"
+                disabled={!file || loading}
+                className={`w-fit pl-4 pr-2 py-2 text-black dark:text-white rounded-[20px] ${
+                  !file || loading
+                    ? "bg-zinc-900 cursor-not-allowed"
+                    : "bg-[#ff8b31] hover:bg-[#ff8a31b3]"
+                }`}
+              >
+                {loading ? (
+                  <div className="flex gap-1">
+                    Processing
+                    <IconLoaderQuarter className="animate-spin" />
+                  </div>
+                ) : (
+                  <div className="flex gap-1">
+                    Process
+                    <IconChevronRight />
+                  </div>
+                )}
+              </button>
+            </div>
+          </form>
+        </>
       )}
+      {error && <p className="mt-4 text-red-500">{error}</p>}
     </div>
   );
 };
