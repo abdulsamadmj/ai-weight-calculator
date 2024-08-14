@@ -19,7 +19,7 @@ function ThemeSwitch() {
       arrow={false}
       content={isLightTheme ? "Toggle Dark Theme" : "Toggle Light Theme"}
     >
-      <button type="button" className="w-10 h-10" onClick={themeSwitchHandler}>
+      <button type="button" className="w-8 h-8" onClick={themeSwitchHandler}>
         {isLightTheme ? (
           <IconMoon className="w-full h-full" />
         ) : (
