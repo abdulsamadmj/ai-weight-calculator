@@ -10,7 +10,6 @@ import {
   IconDownload,
   IconInfoCircleFilled,
   IconLoaderQuarter,
-  IconThumbUp,
   IconThumbUpFilled,
   IconX,
 } from "@tabler/icons-react";
@@ -90,7 +89,7 @@ const FileUploader: React.FC = () => {
   };
 
   const textfieldSubmitHandler = () => {
-    console.log("textfield submitted")
+    
   };
 
   return (
