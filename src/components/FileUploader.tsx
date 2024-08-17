@@ -10,6 +10,7 @@ import {
   IconDownload,
   IconInfoCircleFilled,
   IconLoaderQuarter,
+  IconReload,
   IconThumbUpFilled,
   IconX,
 } from "@tabler/icons-react";
@@ -57,7 +58,7 @@ const FileUploader: React.FC = () => {
     formData.append("file", file);
 
     try {
-      const response = await axios.post("/api/process-file", formData, {
+      const response = await axios.post("/api/calculate-weight", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -88,8 +89,26 @@ const FileUploader: React.FC = () => {
     setTextVal(val.length > 0 ? val : null);
   };
 
-  const textfieldSubmitHandler = () => {
-    
+  const textfieldSubmitHandler = async () => {
+    try {
+      const response = await axios.get("/api/calculate-weight", {
+        params: {
+          message: textVal,
+        },
+        responseType: "blob",
+      });
+
+      const blob = new Blob([response.data], {
+        type: response.headers["content-type"],
+      });
+      const url = URL.createObjectURL(blob);
+      setProcessedFileUrl(url);
+    } catch (error) {
+      console.error("Error processing file:", error);
+      setError("Failed to process the file. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -99,22 +118,24 @@ const FileUploader: React.FC = () => {
           <BackgroundGradient className="relative rounded-[20px] max-w-md w-full bg-white dark:bg-zinc-900 flex justify-center items-center h-64">
             <div className="w-fit">File Preview</div>
           </BackgroundGradient>
-          <div className="flex flex-col items-center px-4">
-            <div className="w-full flex justify-between">
-              <Link
-                href={processedFileUrl ?? ""}
+          <div className="flex flex-col items-center px-2">
+            <div className="w-full flex justify-between gap-1">
+              <a
+                href={processedFileUrl}
                 download="processed_file"
-                className=" flex gap-1 w-fit pl-4 pr-3 py-2 text-black dark:text-white rounded-[20px] bg-[#ff8b31] hover:bg-[#ff8a31b3] mt-4"
+                className=" flex gap-1 w-fit pl-4 pr-3 py-2 text-black dark:text-white rounded-[20px] bg-green-500 hover:bg-green-600 mt-4"
               >
                 Download
                 <IconDownload />
-              </Link>
-              <div className="flex gap-2">
-                <button className="flex gap-1 w-fit pl-4 pr-3 py-2 text-black dark:text-white rounded-[20px] bg-[#ff8b31] hover:bg-[#ff8a31b3] mt-4">
-                  Get Quotation
-                  <IconChevronRight />
-                </button>
-              </div>
+              </a>
+              <button className="flex gap-1 w-fit pl-4 pr-3 py-2 text-black dark:text-white rounded-[20px] bg-[#ff8b31] hover:bg-[#ff8a31b3] mt-4">
+                Retry
+                <IconReload />
+              </button>
+              <button className="flex gap-1 w-fit pl-4 pr-3 py-2 text-black dark:text-white rounded-[20px] bg-blue-500 hover:bg-blue-600 mt-4">
+                Get Quotation
+                <IconChevronRight />
+              </button>
             </div>
             <div className="max-w-md w-full flex flex-col mt-4 items-start">
               <div className="rounded-[20px] p-4 px-6 flex gap-4 backdrop-filter backdrop-blur-sm bg-black bg-opacity-40 w-full">
@@ -147,6 +168,7 @@ const FileUploader: React.FC = () => {
           {!file && (
             <PlaceholdersAndVanishInput
               placeholders={placeholders}
+              loading={loading}
               onChange={textfieldChangeHandler}
               onSubmit={textfieldSubmitHandler}
             />
@@ -222,7 +244,11 @@ const FileUploader: React.FC = () => {
                     className="dark:bg-white bg-black text-white dark:text-black px-2"
                     arrow={false}
                     content={
-                      !file ? "Select a File to Continue" : "Click to Continue"
+                      !file
+                        ? "Select a File to Continue"
+                        : loading
+                        ? "Loading"
+                        : "Click to Continue"
                     }
                     placement="bottom"
                   >
