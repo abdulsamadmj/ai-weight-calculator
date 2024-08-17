@@ -174,6 +174,17 @@ export function PlaceholdersAndVanishInput({
     vanishAndSubmit();
     onSubmit && onSubmit(e);
   };
+
+  const handleClear = (e: any) => {
+    e.preventDefault();
+    vanishAndSubmit();
+    // setValue("");
+    onChange &&
+      onChange({
+        target: { value: "" },
+      } as React.ChangeEvent<HTMLInputElement>);
+  };
+
   return (
     <form
       className={cn(
@@ -206,7 +217,32 @@ export function PlaceholdersAndVanishInput({
         )}
       />
 
+      {value && (
+        <button
+          type="button"
+          onClick={handleClear}
+          className="absolute right-12 top-1/2 z-50 -translate-y-1/2 h-8 w-8 rounded-full bg-gray-200 dark:bg-zinc-700 transition duration-200 flex items-center justify-center"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="text-gray-600 dark:text-gray-300 h-4 w-4"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      )}
+
       <button
+        title="Submit"
         disabled={!value}
         type="submit"
         className="absolute right-2 top-1/2 z-50 -translate-y-1/2 h-8 w-8 rounded-full disabled:bg-gray-100 bg-[#FF8B31] dark:bg-zinc-900 dark:disabled:bg-zinc-800 transition duration-200 flex items-center justify-center"
