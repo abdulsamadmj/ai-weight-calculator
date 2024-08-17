@@ -67,7 +67,7 @@ export default function RootLayout({
         }
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <BackgroundGradientAnimation containerClassName="bg-white dark:bg-zinc-900" />
+          {/* <BackgroundGradientAnimation containerClassName="bg-white dark:bg-zinc-900" /> */}
           <div className="absolute w-screen h-screen flex flex-col items-center z-0">
             <Navbar />
             {children}

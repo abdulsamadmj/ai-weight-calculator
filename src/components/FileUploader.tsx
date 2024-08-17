@@ -89,7 +89,9 @@ const FileUploader: React.FC = () => {
     setTextVal(val.length > 0 ? val : null);
   };
 
-  const textfieldSubmitHandler = () => {};
+  const textfieldSubmitHandler = () => {
+    console.log("textfield submitted")
+  };
 
   return (
     <div className="max-w-md mx-auto mt-8">
