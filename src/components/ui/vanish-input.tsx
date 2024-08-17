@@ -69,9 +69,9 @@ export function PlaceholdersAndVanishInput({
     const pixelData = imageData.data;
     const newData: any[] = [];
 
-    for (let t = 0; t < 800; t++) {
+    for (let t = 0; t < 800; t += 2) {
       let i = 4 * t * 800;
-      for (let n = 0; n < 800; n++) {
+      for (let n = 0; n < 800; n += 2) {
         let e = i + 4 * n;
         if (
           pixelData[e] !== 0 &&
@@ -117,9 +117,9 @@ export function PlaceholdersAndVanishInput({
               current.r = 0;
               continue;
             }
-            current.x += Math.random() > 0.5 ? 1 : -1;
-            current.y += Math.random() > 0.5 ? 1 : -1;
-            current.r -= 0.05 * Math.random();
+            current.x += Math.random() > 0.5 ? 2 : -2;
+            current.y += Math.random() > 0.5 ? 2 : -2;
+            current.r -= 0.1 * Math.random();
             newArr.push(current);
           }
         }
@@ -139,7 +139,7 @@ export function PlaceholdersAndVanishInput({
           });
         }
         if (newDataRef.current.length > 0) {
-          animateFrame(pos - 8);
+          animateFrame(pos - 16);
         } else {
           setValue("");
           setAnimating(false);
@@ -151,7 +151,7 @@ export function PlaceholdersAndVanishInput({
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !animating) {
-      vanishAndSubmit();
+      // vanishAndSubmit();
     }
   };
 
@@ -171,7 +171,7 @@ export function PlaceholdersAndVanishInput({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    vanishAndSubmit();
+    // vanishAndSubmit();
     onSubmit && onSubmit(e);
   };
 
@@ -219,6 +219,7 @@ export function PlaceholdersAndVanishInput({
 
       {value && (
         <button
+          title="Clear"
           type="button"
           onClick={handleClear}
           className="absolute right-12 top-1/2 z-50 -translate-y-1/2 h-8 w-8 rounded-full bg-gray-200 dark:bg-zinc-700 transition duration-200 flex items-center justify-center"
