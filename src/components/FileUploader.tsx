@@ -16,6 +16,7 @@ import {
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { Tooltip } from "flowbite-react";
+import FilePreview from "./preview/FilePreview";
 
 const FileUploader: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -110,7 +111,6 @@ const FileUploader: React.FC = () => {
       setLoading(false);
     }
   };
-
   return (
     <div className="max-w-md mx-auto mt-8">
       {processedFileUrl ? (
@@ -186,40 +186,46 @@ const FileUploader: React.FC = () => {
               </Link>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <BackgroundGradient className="rounded-[20px] max-w-md w-full bg-white dark:bg-zinc-900">
-                  <div
-                    {...getRootProps({ className: "dropzone" })}
-                    className="relative flex items-center justify-center w-full rounded-3xl"
-                  >
-                    <input {...getInputProps()} />
-                    <label
-                      htmlFor="file-upload"
-                      className="flex flex-col items-center justify-center w-full h-64 rounded-[20px] cursor-pointer bg-transparent"
+                  {file ? (
+                    <FilePreview file={file} />
+                  ) : (
+                    <div
+                      {...getRootProps({ className: "dropzone" })}
+                      className="relative flex items-center justify-center w-full rounded-3xl"
                     >
-                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                        <svg
-                          className="w-10 h-10 mb-3 text-gray-400"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                          ></path>
-                        </svg>
-                        <p className="mb-2 text-sm text-gray-500">
-                          <span className="font-semibold">Click to upload</span>{" "}
-                          or drag and drop
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          Excel, PDF, or Image file
-                        </p>
-                      </div>
-                    </label>
-                  </div>
+                      <input {...getInputProps()} />
+                      <label
+                        htmlFor="file-upload"
+                        className="flex flex-col items-center justify-center w-full h-64 rounded-[20px] cursor-pointer bg-transparent"
+                      >
+                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                          <svg
+                            className="w-10 h-10 mb-3 text-gray-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                            ></path>
+                          </svg>
+                          <p className="mb-2 text-sm text-gray-500">
+                            <span className="font-semibold">
+                              Click to upload
+                            </span>{" "}
+                            or drag and drop
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            Excel, PDF, or Image file
+                          </p>
+                        </div>
+                      </label>
+                    </div>
+                  )}
                 </BackgroundGradient>
 
                 {/* {file && (
