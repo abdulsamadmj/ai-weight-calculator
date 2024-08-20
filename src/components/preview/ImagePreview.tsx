@@ -2,20 +2,30 @@
 import Image from "next/image";
 import React from "react";
 
-interface ImagePreviewProps {
-  file: File;
-}
+export type PreviewProps =
+  | {
+      file: File;
+      fileUrl?: string;
+    }
+  | {
+      fileUrl: string;
+      file?: File;
+    };
 
-function ImagePreview({ file }: ImagePreviewProps) {
+function ImagePreview({ file, fileUrl }: PreviewProps) {
   const [imageSrc, setImageSrc] = React.useState<string | ArrayBuffer | null>(
-    null
+    fileUrl ?? null
   );
 
   React.useEffect(() => {
-    const reader = new FileReader();
-    reader.onload = () => setImageSrc(reader.result);
-    reader.readAsDataURL(file);
-  }, [file]);
+    if (fileUrl) {
+      setImageSrc(fileUrl);
+    } else {
+      const reader = new FileReader();
+      reader.onload = () => setImageSrc(reader.result);
+      reader.readAsDataURL(file!);
+    }
+  }, [file, fileUrl]);
 
   return (
     <div className="w-full h-64 flex justify-center items-center">
