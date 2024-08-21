@@ -17,24 +17,30 @@ import {
 import Link from "next/link";
 import { Tooltip } from "flowbite-react";
 import FilePreview from "./preview/FilePreview";
+import ExcelPreview from "./preview/ExcelPreview";
+import { cn } from "./ui/utils";
 
 const FileUploader: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [processedFileUrl, setProcessedFileUrl] = useState<string | null>(null);
+  const [processedFile, setProcessedFile] = useState<{
+    file: File;
+    url: string;
+  } | null>(null);
   const [textVal, setTextVal] = useState<string | null>(null);
 
   const onDrop = (acceptedFiles: File[]) => {
     if (acceptedFiles && acceptedFiles.length > 0) {
       setFile(acceptedFiles[0]);
       setError(null);
-      setProcessedFileUrl(null);
+      setProcessedFile(null);
     }
   };
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
+    disabled: !!(loading || textVal),
     multiple: false,
     accept: {
       "application/pdf": [".pdf"],
@@ -53,7 +59,7 @@ const FileUploader: React.FC = () => {
 
     setLoading(true);
     setError(null);
-    setProcessedFileUrl(null);
+    setProcessedFile(null);
 
     const formData = new FormData();
     formData.append("file", file);
@@ -69,8 +75,12 @@ const FileUploader: React.FC = () => {
       const blob = new Blob([response.data], {
         type: response.headers["content-type"],
       });
-      const url = URL.createObjectURL(blob);
-      setProcessedFileUrl(url);
+      const fileUrl = URL.createObjectURL(blob);
+      const calcFile = new File([blob], "processed_file");
+      setProcessedFile({
+        file: calcFile,
+        url: fileUrl,
+      });
     } catch (error) {
       console.error("Error processing file:", error);
       setError("Failed to process the file. Please try again.");
@@ -102,8 +112,12 @@ const FileUploader: React.FC = () => {
       const blob = new Blob([response.data], {
         type: response.headers["content-type"],
       });
-      const url = URL.createObjectURL(blob);
-      setProcessedFileUrl(url);
+      const fileUrl = URL.createObjectURL(blob);
+      const calcFile = new File([blob], "processed_file");
+      setProcessedFile({
+        file: calcFile,
+        url: fileUrl,
+      });
     } catch (error) {
       console.error("Error processing file:", error);
       setError("Failed to process the file. Please try again.");
@@ -111,28 +125,29 @@ const FileUploader: React.FC = () => {
       setLoading(false);
     }
   };
+
   return (
     <div className="max-w-md mx-auto mt-8">
-      {processedFileUrl ? (
+      {processedFile ? (
         <div>
           <BackgroundGradient className="relative rounded-[20px] max-w-md w-full bg-white dark:bg-zinc-900 flex justify-center items-center h-64">
-            <div className="w-fit">File Preview</div>
+            <ExcelPreview file={processedFile.file} />
           </BackgroundGradient>
           <div className="flex flex-col items-center px-2">
-            <div className="w-full flex justify-between gap-1">
+            <div className="w-full grid grid-cols-2 gap-4 mt-4">
               <a
-                href={processedFileUrl}
+                href={processedFile.url}
                 download="processed_file"
-                className=" flex gap-1 w-fit pl-4 pr-3 py-2 text-black dark:text-white rounded-[20px] bg-green-500 hover:bg-green-600 mt-4"
+                className="col-span-1 hover:cursor-pointer flex justify-center gap-1 w-full pl-4 pr-3 py-2 text-black dark:text-white rounded-[20px] bg-green-500 hover:bg-green-600"
               >
                 Download
                 <IconDownload />
               </a>
-              <button className="flex gap-1 w-fit pl-4 pr-3 py-2 text-black dark:text-white rounded-[20px] bg-[#ff8b31] hover:bg-[#ff8a31b3] mt-4">
+              <button className="col-span-1 flex justify-center gap-1 w-full pl-4 pr-3 py-2 text-black dark:text-white rounded-[20px] bg-[#ff8b31] hover:bg-[#ff8a31b3]">
                 Retry
                 <IconReload />
               </button>
-              <button className="flex gap-1 w-fit pl-4 pr-3 py-2 text-black dark:text-white rounded-[20px] bg-blue-500 hover:bg-blue-600 mt-4">
+              <button className="col-span-2 flex justify-center gap-1 w-full pl-4 pr-3 py-2 text-black dark:text-white rounded-[20px] bg-blue-500 hover:bg-blue-600">
                 Get Quotation
                 <IconChevronRight />
               </button>
@@ -165,127 +180,136 @@ const FileUploader: React.FC = () => {
         </div>
       ) : (
         <>
-          {!file && (
-            <PlaceholdersAndVanishInput
-              placeholders={placeholders}
-              loading={loading}
-              onChange={textfieldChangeHandler}
-              onSubmit={textfieldSubmitHandler}
-            />
-          )}
-          {!(file || textVal) && (
-            <div className="p-5 pb-0 text-xl text-center">OR</div>
-          )}
-          {!textVal ? (
-            <>
-              <Link
-                href={""}
-                className="w-full flex gap-1 justify-end pr-2 pb-2"
-              >
-                Sample Data <IconInfoCircleFilled />
-              </Link>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <BackgroundGradient className="rounded-[20px] max-w-md w-full bg-white dark:bg-zinc-900">
-                  {file ? (
-                    <FilePreview file={file} />
-                  ) : (
-                    <div
-                      {...getRootProps({ className: "dropzone" })}
-                      className="relative flex items-center justify-center w-full rounded-3xl"
-                    >
-                      <input {...getInputProps()} />
-                      <label
-                        htmlFor="file-upload"
-                        className="flex flex-col items-center justify-center w-full h-64 rounded-[20px] cursor-pointer bg-transparent"
+          <PlaceholdersAndVanishInput
+            placeholders={
+              file ? ["Remove file to use the textfield"] : placeholders
+            }
+            loading={loading}
+            disabled={!!file}
+            onChange={textfieldChangeHandler}
+            onSubmit={textfieldSubmitHandler}
+          />
+          <div className="p-5 pb-0 text-xl text-center">OR</div>
+          <Link
+            href={"/sample-data"}
+            className="w-full flex gap-1 justify-end pr-2 pb-2"
+          >
+            Sample Data <IconInfoCircleFilled />
+          </Link>
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-4 cursor-not-allowed"
+          >
+            <BackgroundGradient className="rounded-[20px] max-w-md w-full bg-white dark:bg-zinc-900">
+              {file ? (
+                <FilePreview file={file} />
+              ) : (
+                <div
+                  {...getRootProps({ className: "dropzone" })}
+                  className="relative flex items-center justify-center w-full rounded-3xl"
+                >
+                  <input {...getInputProps()} />
+                  <label
+                    htmlFor="file-upload"
+                    className={cn(
+                      "flex flex-col items-center justify-center w-full h-64 rounded-[20px] cursor-pointer bg-transparent",
+                      loading && "cursor-wait",
+                      textVal && "cursor-not-allowed"
+                    )}
+                  >
+                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                      <svg
+                        className="w-10 h-10 mb-3 text-gray-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
                       >
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                          <svg
-                            className="w-10 h-10 mb-3 text-gray-400"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                            ></path>
-                          </svg>
-                          <p className="mb-2 text-sm text-gray-500">
-                            <span className="font-semibold">
-                              Click to upload
-                            </span>{" "}
-                            or drag and drop
-                          </p>
-                          <p className="text-xs text-gray-500">
-                            Excel, PDF, or Image file
-                          </p>
-                        </div>
-                      </label>
-                    </div>
-                  )}
-                </BackgroundGradient>
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                        ></path>
+                      </svg>
+                      <p className="mb-2 text-sm text-gray-500">
+                        <span className="font-semibold">Click to upload</span>{" "}
+                        or drag and drop
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        Excel, PDF, or Image file
+                      </p>
 
-                {/* {file && (
+                      <p className="text-xs text-red-500 h-2">
+                        {textVal && "Clear Textfield to use File Upload"}
+                      </p>
+                    </div>
+                  </label>
+                </div>
+              )}
+            </BackgroundGradient>
+
+            {/* {file && (
               <p className="text-sm text-gray-500">
                 Selected file: {file.name}
               </p>
             )} */}
-                <div className="w-full flex justify-between mt-4 items-center px-4">
-                  <div className="">
-                    {file ? (
-                      <div className="flex  gap-2 w-fit px-4 py-2 items-center bg-[#ff8b31] bg-opacity-20 rounded-[20px] ">
-                        <p>{file?.name}</p>
-                        <button onClick={() => setFile(null)}>
-                          <IconX />
-                        </button>
-                      </div>
-                    ) : (
-                      <p>No Files Selected</p>
-                    )}
-                  </div>
-                  <Tooltip
-                    className="dark:bg-white bg-black text-white dark:text-black px-2"
-                    arrow={false}
-                    content={
-                      !file
-                        ? "Select a File to Continue"
-                        : loading
-                        ? "Loading"
-                        : "Click to Continue"
-                    }
-                    placement="bottom"
-                  >
+            <div className="w-full flex justify-between mt-4 items-center px-4">
+              <div className="">
+                {file ? (
+                  <div className="flex  gap-2 w-fit px-4 py-2 items-center bg-[#ff8b31] bg-opacity-20 rounded-[20px] ">
+                    <p>{file?.name}</p>
                     <button
-                      type="submit"
-                      disabled={!file || loading}
-                      className={`w-fit pl-4 pr-2 py-2 text-black dark:text-white rounded-[20px] hover:cursor-pointer ${
-                        !file
-                          ? "bg-gray-500 dark:bg-zinc-900  disabled:cursor-not-allowed"
-                          : loading
-                          ? "bg-gray-500 dark:bg-zinc-900 disabled:cursor-wait"
-                          : "bg-[#ff8b31] hover:bg-[#ff8a31b3]"
-                      }`}
+                      title="Remove File"
+                      className={loading ? "cursor-not-allowed" : ""}
+                      disabled={loading}
+                      onClick={() => setFile(null)}
                     >
-                      {loading ? (
-                        <div className="flex gap-1">
-                          Processing
-                          <IconLoaderQuarter className="animate-spin" />
-                        </div>
-                      ) : (
-                        <div className="flex gap-1">
-                          Process
-                          <IconChevronRight />
-                        </div>
-                      )}
+                      <IconX />
                     </button>
-                  </Tooltip>
-                </div>
-              </form>
-            </>
-          ) : null}
+                  </div>
+                ) : (
+                  <p>No Files Selected</p>
+                )}
+              </div>
+              <Tooltip
+                className="dark:bg-white bg-black text-white dark:text-black px-2"
+                arrow={false}
+                content={
+                  !file
+                    ? "Select a File to Continue"
+                    : loading
+                    ? "Loading"
+                    : "Click to Continue"
+                }
+                placement="bottom"
+              >
+                <button
+                  type="submit"
+                  disabled={!file || loading}
+                  className={`w-fit pl-4 pr-2 py-2 text-black dark:text-white rounded-[20px] hover:cursor-pointer ${
+                    !file
+                      ? "bg-gray-500 dark:bg-zinc-900  disabled:cursor-not-allowed"
+                      : loading
+                      ? "bg-gray-500 dark:bg-zinc-900 disabled:cursor-wait"
+                      : "bg-[#ff8b31] hover:bg-[#ff8a31b3]"
+                  }`}
+                >
+                  {loading ? (
+                    <div className="flex gap-1">
+                      Processing
+                      <IconLoaderQuarter className="animate-spin" />
+                    </div>
+                  ) : (
+                    <div className="flex gap-1">
+                      Process
+                      <IconChevronRight />
+                    </div>
+                  )}
+                </button>
+              </Tooltip>
+            </div>
+          </form>
         </>
       )}
       {error && <p className="mt-4 text-red-500">{error}</p>}

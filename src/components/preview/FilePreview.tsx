@@ -24,9 +24,11 @@ function FilePreview({ file, fileUrl }: FilePreviewProps) {
   } else if (fileType === "application/pdf") {
     return <PDFPreview file={file} fileUrl={fileUrl} />;
   } else if (
-    fileType ===
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
-    fileType === "application/vnd.ms-excel"
+    [
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "application/vnd.ms-excel",
+      "text/csv",
+    ].includes(fileType)
   ) {
     return <ExcelPreview file={file} fileUrl={fileUrl} />;
   } else {
