@@ -29,6 +29,14 @@ export const helperFunctions = {
     return JSON.stringify(jsonData);
   },
 
+  processCSV: async (file: File): Promise<string> => {
+    const text = await file.text();
+    const workbook = XLSX.read(text, { type: "string" });
+    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+    const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+    return JSON.stringify(jsonData);
+  },
+
   processPDF: async (file: File): Promise<string> => {
     const arrayBuffer = await file.arrayBuffer();
     const tempDir = os.tmpdir();

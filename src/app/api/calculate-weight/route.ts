@@ -44,6 +44,18 @@ export async function POST(req: Request) {
           content: content,
         },
       ];
+    } else if (file.type.includes("csv")) {
+      const content = await helperFunctions.processCSV(file);
+      messages = [
+        {
+          role: "system",
+          content: systemContent,
+        },
+        {
+          role: "user",
+          content: content,
+        },
+      ];
     } else if (file.type === "application/pdf") {
       const content = await helperFunctions.processPDF(file);
       messages = [
