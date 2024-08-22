@@ -28,7 +28,7 @@ function ImagePreview({ file, fileUrl }: PreviewProps) {
   }, [file, fileUrl]);
 
   return (
-    <div className="w-full h-64 flex justify-center items-center">
+    <div className="w-full h-64 flex justify-center items-center rounded-[20px] overflow-hidden">
       {imageSrc && (
         <Image
           className="h-full w-full object-contain"

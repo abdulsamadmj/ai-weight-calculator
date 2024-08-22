@@ -32,7 +32,11 @@ function FilePreview({ file, fileUrl }: FilePreviewProps) {
   ) {
     return <ExcelPreview file={file} fileUrl={fileUrl} />;
   } else {
-    return <p>File type not supported for preview.</p>;
+    return (
+      <p className="h-64 w-64 flex justify-center items-center">
+        File type not supported for preview.
+      </p>
+    );
   }
 }
 

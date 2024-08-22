@@ -302,7 +302,7 @@ const FileUploader: React.FC = () => {
                     </div>
                   ) : (
                     <div className="flex gap-1">
-                      Process
+                      Submit
                       <IconChevronRight />
                     </div>
                   )}
