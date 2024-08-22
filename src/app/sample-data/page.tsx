@@ -8,11 +8,11 @@ import { IconDownload } from "@tabler/icons-react";
 export default function SampleDataPage() {
   return (
     <main className="container mx-auto py-2 overflow-x-hidden scrollbar-thin pb-14 px-2">
-      <h1 className="text-3xl font-bold text-center mb-4 flex justify-center">
+      <h1 className="text-3xl font-bold text-center mb-3 flex justify-center">
         Sample Data Files
       </h1>
       <div className="w-full flex justify-center">
-        <div className="max-w-screen-lg w-full mt-4 flex flex-col">
+        <div className="max-w-screen-lg w-full flex flex-col">
           <div className="flex flex-col md:flex-row gap-4">
             <div>
               <h6 className="text-xl px-2">Image</h6>
