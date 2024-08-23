@@ -254,11 +254,11 @@ const FileUploader: React.FC = () => {
                 Selected file: {file.name}
               </p>
             )} */}
-            <div className="w-full flex justify-between mt-4 items-center px-4">
-              <div className="">
+            <div className="w-full flex flex-col justify-between mt-4 items-center px-4 gap-4">
+              <div className="w-full h-10">
                 {file ? (
-                  <div className="flex  gap-2 w-fit px-4 py-2 items-center bg-[#ff8b31] bg-opacity-20 rounded-[20px] ">
-                    <p>{file?.name}</p>
+                  <div className="flex truncate gap-2 w-full px-4 py-2 items-center bg-[#ff8b31] bg-opacity-20 rounded-[20px]">
+                    <p className="truncate">{file?.name}</p>
                     <button
                       title="Remove File"
                       className={loading ? "cursor-not-allowed" : ""}
@@ -269,45 +269,41 @@ const FileUploader: React.FC = () => {
                     </button>
                   </div>
                 ) : (
-                  <p>No Files Selected</p>
+                  <div className="flex truncate gap-2 w-full px-4 py-2 items-center">
+                    No Files Selected
+                  </div>
                 )}
               </div>
-              <Tooltip
-                className="dark:bg-white bg-black text-white dark:text-black px-2"
-                arrow={false}
-                content={
+              <button
+                title={
                   !file
                     ? "Select a File to Continue"
                     : loading
                     ? "Loading"
                     : "Click to Continue"
                 }
-                placement="bottom"
+                type="submit"
+                disabled={!file || loading}
+                className={`w-full flex justify-center pl-4 pr-2 py-2 text-black dark:text-white rounded-[20px] hover:cursor-pointer ${
+                  !file
+                    ? "bg-gray-500 dark:bg-zinc-900  disabled:cursor-not-allowed"
+                    : loading
+                    ? "bg-gray-500 dark:bg-zinc-900 disabled:cursor-wait"
+                    : "bg-[#ff8b31] hover:bg-[#ff8a31b3]"
+                }`}
               >
-                <button
-                  type="submit"
-                  disabled={!file || loading}
-                  className={`w-fit pl-4 pr-2 py-2 text-black dark:text-white rounded-[20px] hover:cursor-pointer ${
-                    !file
-                      ? "bg-gray-500 dark:bg-zinc-900  disabled:cursor-not-allowed"
-                      : loading
-                      ? "bg-gray-500 dark:bg-zinc-900 disabled:cursor-wait"
-                      : "bg-[#ff8b31] hover:bg-[#ff8a31b3]"
-                  }`}
-                >
-                  {loading ? (
-                    <div className="flex gap-1">
-                      Processing
-                      <IconLoaderQuarter className="animate-spin" />
-                    </div>
-                  ) : (
-                    <div className="flex gap-1">
-                      Submit
-                      <IconChevronRight />
-                    </div>
-                  )}
-                </button>
-              </Tooltip>
+                {loading ? (
+                  <div className="flex gap-1">
+                    Processing
+                    <IconLoaderQuarter className="animate-spin" />
+                  </div>
+                ) : (
+                  <div className="flex gap-1">
+                    Submit
+                    <IconChevronRight />
+                  </div>
+                )}
+              </button>
             </div>
           </form>
         </>
