@@ -5,6 +5,7 @@ import React from "react";
 import { useTheme } from "next-themes";
 import logoWhite from "@/assets/images/logo-white.png";
 import logoBlack from "@/assets/images/logo-black.png";
+import Link from "next/link";
 
 function LogoComponent() {
   const { resolvedTheme } = useTheme();
@@ -13,13 +14,13 @@ function LogoComponent() {
     setLogoSrc(resolvedTheme == "dark" ? logoWhite : logoBlack);
   }, [resolvedTheme]);
   return (
-    <div>
+    <Link href='/'>
       <Image
         className="w-28 h-20 object-contain"
         src={logoSrc}
         alt="Metal Zone General Trading LLC Logo"
       />
-    </div>
+    </Link>
   );
 }
 
