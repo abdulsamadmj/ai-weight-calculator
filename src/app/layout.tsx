@@ -4,6 +4,7 @@ import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { BackgroundGradientAnimation } from "@/components/ui/bg-gradient-animation";
+import { AppProvider } from "@/utils/AppContext";
 
 // const inter = Inter({ subsets: ["latin"] });
 
@@ -66,13 +67,15 @@ export default function RootLayout({
           " flex flex-col items-center text-black dark:text-white"
         }
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {/* <BackgroundGradientAnimation containerClassName="bg-white dark:bg-zinc-900" /> */}
-          <div className="absolute w-screen h-screen flex flex-col items-center z-0">
-            <Navbar />
-            {children}
-          </div>
-        </ThemeProvider>
+        <AppProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            {/* <BackgroundGradientAnimation containerClassName="bg-white dark:bg-zinc-900" /> */}
+            <div className="absolute w-screen h-screen flex flex-col items-center z-0">
+              <Navbar />
+              {children}
+            </div>
+          </ThemeProvider>
+        </AppProvider>
       </body>
     </html>
   );
