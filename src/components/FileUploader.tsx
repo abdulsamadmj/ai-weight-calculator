@@ -257,7 +257,7 @@ const FileUploader: React.FC = () => {
             <div className="w-full flex flex-col justify-between mt-4 items-center px-4 gap-4">
               <div className="w-full h-10">
                 {file ? (
-                  <div className="flex truncate gap-2 w-full px-4 py-2 items-center bg-[#ff8b31] bg-opacity-20 rounded-[20px]">
+                  <div className="flex truncate gap-2 w-full px-4 py-2 items-center justify-between bg-[#ff8b31] bg-opacity-20 rounded-[20px]">
                     <p className="truncate">{file?.name}</p>
                     <button
                       title="Remove File"
