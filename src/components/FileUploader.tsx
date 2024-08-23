@@ -248,12 +248,6 @@ const FileUploader: React.FC = () => {
                 </div>
               )}
             </BackgroundGradient>
-
-            {/* {file && (
-              <p className="text-sm text-gray-500">
-                Selected file: {file.name}
-              </p>
-            )} */}
             <div className="w-full flex flex-col justify-between mt-4 items-center px-4 gap-4">
               <div className="w-full h-10">
                 {file ? (
