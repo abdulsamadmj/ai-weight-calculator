@@ -10,17 +10,24 @@ import {
   IconThumbUpFilled,
 } from "@tabler/icons-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 function CalculatedPage() {
   const { appData } = useAppData();
+  const router = useRouter();
+
+  React.useEffect(() => {
+    if(!appData?.processedFile)
+      router.replace('/')
+  }, [appData?.processedFile, router])
 
   return appData?.processedFile ? (
-    <main className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-center mb-8 flex justify-center">
+    <main className="container mx-auto px-4">
+      <h1 className="text-3xl font-bold text-center flex justify-center">
         <p>Weight Calculated Result</p>
       </h1>
-      <div className="max-w-md mx-auto mt-8">
+      <div className="max-w-md mx-auto mt-5">
         <BackgroundGradient className="relative rounded-[20px] max-w-md w-full bg-white dark:bg-zinc-900 flex justify-center items-center h-64">
           <ExcelPreview file={appData.processedFile.file} />
         </BackgroundGradient>
@@ -70,7 +77,7 @@ function CalculatedPage() {
               </div>
             </div>
           </div>
-          <button className="flex justify-center gap-1 w-fit pl-4 pr-3 py-2 text-black dark:text-white rounded-[20px] bg-blue-500 hover:bg-blue-600 backdrop-filter backdrop-blur-sm bg-opacity-30">
+          <button className="flex justify-center gap-1 w-fit pl-4 pr-3 py-2 mt-2 text-black dark:text-white rounded-[20px] bg-blue-500 hover:bg-blue-600 backdrop-filter backdrop-blur-sm bg-opacity-30">
             Copy Result URL
             <IconLink />
           </button>

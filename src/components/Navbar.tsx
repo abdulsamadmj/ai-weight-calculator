@@ -26,9 +26,6 @@ function Navbar() {
         </Link>
         <ThemeSwitch />
       </div>
-      <Link href={""} className="absolute bottom-5 flex gap-1">
-        Report a Problem <IconAlertTriangleFilled />
-      </Link>
     </div>
   );
 }
