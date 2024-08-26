@@ -8,8 +8,8 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-center mb-8 flex justify-center">
+    <main className="container mx-auto px-4">
+      <h1 className="text-3xl font-bold text-center flex justify-center">
         <p>
           AI Steel Equipment Weight Calculator (Beta
           <Link className="inline" href={""}>
