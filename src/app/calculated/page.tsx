@@ -18,9 +18,8 @@ function CalculatedPage() {
   const router = useRouter();
 
   React.useEffect(() => {
-    if(!appData?.processedFile)
-      router.replace('/')
-  }, [appData?.processedFile, router])
+    if (!appData?.processedFile) router.replace("/");
+  }, [appData?.processedFile, router]);
 
   return appData?.processedFile ? (
     <main className="container mx-auto px-4">
@@ -43,6 +42,9 @@ function CalculatedPage() {
             </a>
             <Link
               href="/"
+              onClick={() => {
+                appData.processedFile = null;
+              }}
               className="col-span-1 flex justify-center gap-1 w-full pl-4 pr-3 py-2 text-black dark:text-white rounded-[20px] bg-[#ff8b31] hover:bg-[#ff8a31b3]"
             >
               Retry

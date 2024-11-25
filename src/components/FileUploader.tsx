@@ -237,16 +237,18 @@ const FileUploader: React.FC = () => {
                 : "Click to Continue"
             }
             type="submit"
-            disabled={!appData?.inputFile || loading}
+            disabled={
+              !appData?.inputFile || !!appData?.processedFile || loading
+            }
             className={`w-full flex justify-center pl-4 pr-2 py-2 text-black dark:text-white rounded-[20px] hover:cursor-pointer ${
-              !appData?.inputFile
+              !appData?.inputFile || appData?.processedFile
                 ? "bg-gray-500 dark:bg-zinc-900  disabled:cursor-not-allowed"
                 : loading
                 ? "bg-gray-500 dark:bg-zinc-900 disabled:cursor-wait"
                 : "bg-[#ff8b31] hover:bg-[#ff8a31b3]"
             }`}
           >
-            {loading ? (
+            {loading || appData?.processedFile ? (
               <div className="flex gap-1">
                 Processing
                 <IconLoaderQuarter className="animate-spin" />
